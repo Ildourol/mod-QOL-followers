@@ -1,0 +1,292 @@
+#
+# Copyright (C) 2026+ AzerothCore Project
+# Standalone Utility Follower Module Configuration
+#
+
+[worldserver]
+
+###################################################################################################
+# UTILITY FOLLOWERS CONFIGURATION
+###################################################################################################
+#
+#    UtilityFollowers.Enable
+#        Description: Master switch to enable or disable the Utility Followers module entirely.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Enable = 1
+
+###################################################################################################
+# INDIVIDUAL FOLLOWER ENABLES
+###################################################################################################
+#
+#    UtilityFollowers.Banker.Enable
+#        Description: Enable or disable the player-owned Banker follower.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Banker.Enable = 1
+
+#
+#    UtilityFollowers.Auctioneer.Enable
+#        Description: Enable or disable the player-owned Auctioneer follower.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Auctioneer.Enable = 1
+
+#
+#    UtilityFollowers.Trainer.Enable
+#        Description: Enable or disable the player-owned Trainer Book follower.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Trainer.Enable = 1
+
+###################################################################################################
+# MOVEMENT CONFIGURATION
+###################################################################################################
+#
+#    UtilityFollowers.FollowDistance
+#        Description: The preferred steady-state distance (in yards) between the owner and follower.
+#        Default:     3.0
+#
+
+UtilityFollowers.FollowDistance = 3.0
+
+#
+#    UtilityFollowers.StartFollowingDistance
+#        Description: Distance (in yards) beyond which the follower resumes moving toward the owner.
+#                     Creates hysteresis so followers do not jitter or constantly start/stop on small movements.
+#        Default:     5.0
+#
+
+UtilityFollowers.StartFollowingDistance = 5.0
+
+#
+#    UtilityFollowers.CatchUpDistance
+#        Description: Distance (in yards) beyond which the follower uses safe catch-up/teleportation.
+#        Default:     30.0
+#
+
+UtilityFollowers.CatchUpDistance = 30.0
+
+#
+#    UtilityFollowers.FollowUpdateInterval
+#        Description: Cadence (in milliseconds) at which follower movement logic and state are checked.
+#                     Prevents excessive CPU utilization and path recalculation every server tick.
+#        Default:     500 (half a second)
+#
+
+UtilityFollowers.FollowUpdateInterval = 500
+
+#
+#    UtilityFollowers.TeleportWhenStuck
+#        Description: Whether to teleport the follower to the owner if it gets stuck or exceeds CatchUpDistance.
+#        Default:     1 - Yes
+#                     0 - No
+#
+
+UtilityFollowers.TeleportWhenStuck = 1
+
+###################################################################################################
+# ACTIVE FOLLOWER CAPACITY & POLICY
+###################################################################################################
+#
+#    UtilityFollowers.MaxActive
+#        Description: Maximum number of utility followers a player can have active at the same time.
+#        Default:     3 (Allows Banker, Auctioneer, and Trainer all active simultaneously)
+#
+
+UtilityFollowers.MaxActive = 3
+
+#
+#    UtilityFollowers.MaxActivePolicy
+#        Description: Policy when the player attempts to summon another follower while already at MaxActive.
+#                     "Reject"        - Fail the new summon cleanly with a notification message.
+#                     "ReplaceOldest" - Despawn the player's oldest active follower and summon the new one.
+#        Default:     "Reject"
+#
+
+UtilityFollowers.MaxActivePolicy = "Reject"
+
+###################################################################################################
+# ENVIRONMENT & PVP RESTRICTIONS
+###################################################################################################
+#
+#    UtilityFollowers.AllowInWorld
+#        Description: Allow followers in standard open world maps (continents).
+#        Default:     1 - Allowed
+#                     0 - Disabled
+#
+
+UtilityFollowers.AllowInWorld = 1
+
+#
+#    UtilityFollowers.AllowInDungeons
+#        Description: Allow followers inside 5-player dungeon instances.
+#        Default:     1 - Allowed
+#                     0 - Disabled
+#
+
+UtilityFollowers.AllowInDungeons = 1
+
+#
+#    UtilityFollowers.AllowInRaids
+#        Description: Allow followers inside raid instances.
+#        Default:     1 - Allowed
+#                     0 - Disabled
+#
+
+UtilityFollowers.AllowInRaids = 1
+
+#
+#    UtilityFollowers.AllowInBattlegrounds
+#        Description: Allow followers inside Battleground PvP instances.
+#        Default:     0 - Disabled (prevent PvP interference)
+#                     1 - Allowed
+#
+
+UtilityFollowers.AllowInBattlegrounds = 0
+
+#
+#    UtilityFollowers.AllowInArenas
+#        Description: Allow followers inside Arena PvP instances.
+#        Default:     0 - Disabled (prevent PvP interference)
+#                     1 - Allowed
+#
+
+UtilityFollowers.AllowInArenas = 0
+
+#
+#    UtilityFollowers.AutoSpawn
+#        Description: Automatically restore active followers on login.
+#        Default:     0 - Disabled (players summon their followers via spells/commands)
+#                     1 - Enabled
+#
+
+UtilityFollowers.AutoSpawn = 0
+
+###################################################################################################
+# FOLLOWER APPEARANCE CONFIGURATION
+###################################################################################################
+#
+#    Creature Template Entries & Native Display IDs (WotLK 3.3.5a verified data):
+#      - Banker Horde: Pack Kodo (Creature 10636, DisplayId 7933)
+#      - Banker Alliance: Pack Mule (Creature 16225, DisplayId 14546)
+#      - Auctioneer: Goblin Auctioneer (Creature 8661, DisplayId 7993)
+#      - Trainer: Magical Tome / Book (Creature 26904, DisplayId 28103)
+#
+
+# Banker Appearance
+UtilityFollowers.Banker.CreatureEntry.Horde = 10636
+UtilityFollowers.Banker.CreatureEntry.Alliance = 16225
+UtilityFollowers.Banker.Horde.DisplayId = 7933
+UtilityFollowers.Banker.Alliance.DisplayId = 14546
+UtilityFollowers.Banker.Scale = 1.0
+
+# Auctioneer Appearance
+UtilityFollowers.Auctioneer.CreatureEntry = 8661
+UtilityFollowers.Auctioneer.DisplayId = 7993
+UtilityFollowers.Auctioneer.Scale = 1.0
+
+# Trainer Appearance
+UtilityFollowers.Trainer.CreatureEntry = 26904
+UtilityFollowers.Trainer.DisplayId = 28103
+UtilityFollowers.Trainer.Scale = 1.0
+
+###################################################################################################
+# DEDICATED SUMMON SPELLS CONFIGURATION
+###################################################################################################
+#
+#    Summon Spells:
+#    Each follower has its own independent summon spell. Casting the spell when the follower is
+#    absent summons it; casting the spell when the follower is present dismisses only that follower.
+#
+#    Verified Server-Only Safe Default Spell IDs:
+#      - Banker: Spell 67368 ("Bank Errand" - Icon: inv_misc_coin_02 [gold coin])
+#      - Auctioneer: Spell 54614 ("Steam-Powered Auctioneer" - Icon: trade_engineering)
+#      - Trainer: Spell 54270 ("Argent Tome Book Spawn" - Icon: inv_misc_book_13 [tome])
+#
+#    If using a custom client MPQ patch with custom Spell.dbc entries, custom spell IDs can be set here.
+#
+
+# Banker Summon Spell
+UtilityFollowers.Banker.Spell.Enable = 1
+UtilityFollowers.Banker.Spell.AutoLearn = 1
+UtilityFollowers.Banker.Spell.LearnLevel = 1
+UtilityFollowers.Banker.Spell.SpellId = 67368
+
+# Auctioneer Summon Spell
+UtilityFollowers.Auctioneer.Spell.Enable = 1
+UtilityFollowers.Auctioneer.Spell.AutoLearn = 1
+UtilityFollowers.Auctioneer.Spell.LearnLevel = 5
+UtilityFollowers.Auctioneer.Spell.SpellId = 54614
+
+# Trainer Summon Spell
+UtilityFollowers.Trainer.Spell.Enable = 1
+UtilityFollowers.Trainer.Spell.AutoLearn = 1
+UtilityFollowers.Trainer.Spell.LearnLevel = 10
+UtilityFollowers.Trainer.Spell.SpellId = 54270
+
+#
+#    UtilityFollowers.Spells.SyncOnLogin
+#        Description: Synchronize follower spells on player login. Automatically teaches any missing
+#                     eligible auto-learn spells to characters whose level meets the requirement.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Spells.SyncOnLogin = 1
+
+#
+#    UtilityFollowers.Spells.RemoveIfBelowLevel
+#        Description: Remove a summon spell if a player de-levels below the required learn level.
+#        Default:     0 - Disabled (spells remain known)
+#                     1 - Enabled
+#
+
+UtilityFollowers.Spells.RemoveIfBelowLevel = 0
+
+###################################################################################################
+# TRAINER FOLLOWER SERVICE CONFIGURATION
+###################################################################################################
+#
+#    UtilityFollowers.Trainer.FreeTraining
+#        Description: Whether class and profession training spells cost 0 money.
+#        Default:     0 - Normal costs apply
+#                     1 - Free training
+#
+
+UtilityFollowers.Trainer.FreeTraining = 0
+
+#
+#    UtilityFollowers.Trainer.IgnoreLevelRequirements
+#        Description: Whether to bypass level requirements for trainer spells.
+#        Default:     0 - Normal level requirements apply
+#                     1 - Bypass level requirements
+#
+
+UtilityFollowers.Trainer.IgnoreLevelRequirements = 0
+
+#
+#    UtilityFollowers.Trainer.FreeTalentReset
+#        Description: Whether resetting talents through the Trainer Book is free of cost.
+#        Default:     0 - Normal progressive reset costs apply
+#                     1 - Free talent reset
+#
+
+UtilityFollowers.Trainer.FreeTalentReset = 0
+
+#
+#    UtilityFollowers.Trainer.ProfessionMode
+#        Description: Profession training behavior mode.
+#                     "Trainer" - Opens the official Grand Master profession trainer window.
+#        Default:     "Trainer"
+#
+
+UtilityFollowers.Trainer.ProfessionMode = "Trainer"

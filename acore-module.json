@@ -1,0 +1,10 @@
+{
+  "name": "mod-QOL-followers",
+  "version": "1.0.0",
+  "description": "Standalone AzerothCore utility follower module providing Banker, Auctioneer, and Trainer Book companions",
+  "author": "Antigravity",
+  "compatibility": [
+    { "version": "^3.0.0", "branch": "master" },
+    { "version": "^3.0.0", "branch": "Playerbot" }
+  ]
+}

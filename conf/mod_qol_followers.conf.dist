@@ -53,19 +53,19 @@ UtilityFollowers.Trainer.Enable = 1
 #
 #    UtilityFollowers.FollowDistance
 #        Description: The preferred steady-state distance (in yards) between the owner and follower.
-#        Default:     3.0
+#        Default:     3.5
 #
 
-UtilityFollowers.FollowDistance = 3.0
+UtilityFollowers.FollowDistance = 3.5
 
 #
 #    UtilityFollowers.StartFollowingDistance
 #        Description: Distance (in yards) beyond which the follower resumes moving toward the owner.
-#                     Creates hysteresis so followers do not jitter or constantly start/stop on small movements.
-#        Default:     5.0
+#                     Creates a comfortable deadzone so followers do not jitter or react to in-place character turns.
+#        Default:     7.0
 #
 
-UtilityFollowers.StartFollowingDistance = 5.0
+UtilityFollowers.StartFollowingDistance = 7.0
 
 #
 #    UtilityFollowers.CatchUpDistance
@@ -79,10 +79,10 @@ UtilityFollowers.CatchUpDistance = 30.0
 #    UtilityFollowers.FollowUpdateInterval
 #        Description: Cadence (in milliseconds) at which follower movement logic and state are checked.
 #                     Prevents excessive CPU utilization and path recalculation every server tick.
-#        Default:     500 (half a second)
+#        Default:     300 (0.3 seconds for smooth following)
 #
 
-UtilityFollowers.FollowUpdateInterval = 500
+UtilityFollowers.FollowUpdateInterval = 300
 
 #
 #    UtilityFollowers.TeleportWhenStuck
@@ -99,20 +99,20 @@ UtilityFollowers.TeleportWhenStuck = 1
 #
 #    UtilityFollowers.MaxActive
 #        Description: Maximum number of utility followers a player can have active at the same time.
-#        Default:     3 (Allows Banker, Auctioneer, and Trainer all active simultaneously)
+#        Default:     1 (Allows 1 active QoL follower at a time by default)
 #
 
-UtilityFollowers.MaxActive = 3
+UtilityFollowers.MaxActive = 1
 
 #
 #    UtilityFollowers.MaxActivePolicy
 #        Description: Policy when the player attempts to summon another follower while already at MaxActive.
 #                     "Reject"        - Fail the new summon cleanly with a notification message.
 #                     "ReplaceOldest" - Despawn the player's oldest active follower and summon the new one.
-#        Default:     "Reject"
+#        Default:     "ReplaceOldest"
 #
 
-UtilityFollowers.MaxActivePolicy = "Reject"
+UtilityFollowers.MaxActivePolicy = "ReplaceOldest"
 
 ###################################################################################################
 # ENVIRONMENT & PVP RESTRICTIONS
@@ -179,7 +179,7 @@ UtilityFollowers.AutoSpawn = 0
 #      - Banker Horde: Pack Kodo (Creature 10636, DisplayId 7933)
 #      - Banker Alliance: Pack Mule (Creature 16225, DisplayId 14546)
 #      - Auctioneer: Goblin Auctioneer (Creature 8661, DisplayId 7993)
-#      - Trainer: Magical Tome / Book (Creature 26904, DisplayId 28103)
+#      - Medivh (Trainer & Teleporter): The Last Guardian (Creature 15608, DisplayId 18718)
 #
 
 # Banker Appearance
@@ -194,9 +194,9 @@ UtilityFollowers.Auctioneer.CreatureEntry = 8661
 UtilityFollowers.Auctioneer.DisplayId = 7993
 UtilityFollowers.Auctioneer.Scale = 1.0
 
-# Trainer Appearance
-UtilityFollowers.Trainer.CreatureEntry = 26904
-UtilityFollowers.Trainer.DisplayId = 28103
+# Medivh (Trainer & Teleporter) Appearance
+UtilityFollowers.Trainer.CreatureEntry = 15608
+UtilityFollowers.Trainer.DisplayId = 18718
 UtilityFollowers.Trainer.Scale = 1.0
 
 ###################################################################################################
@@ -207,31 +207,40 @@ UtilityFollowers.Trainer.Scale = 1.0
 #    Each follower has its own independent summon spell. Casting the spell when the follower is
 #    absent summons it; casting the spell when the follower is present dismisses only that follower.
 #
-#    Verified Server-Only Safe Default Spell IDs:
-#      - Banker: Spell 67368 ("Bank Errand" - Icon: inv_misc_coin_02 [gold coin])
-#      - Auctioneer: Spell 54614 ("Steam-Powered Auctioneer" - Icon: trade_engineering)
-#      - Trainer: Spell 54270 ("Argent Tome Book Spawn" - Icon: inv_misc_book_13 [tome])
+#    Dedicated Conflict-Free Spell IDs (Instant, 0 Mana, 0 Cooldown, No Reagents, No Focus/Area limits):
+#      - Banker:     Spell 87094 ("Summon Banker" - Icon: inv_misc_coin_02 [gold coin])
+#      - Auctioneer: Spell 87093 ("Goblin Auctioneer" - Icon: achievement_goblinhead [goblin head])
+#      - Trainer:    Spell 87092 ("Summon Medivh" - Icon: Spell_Nature_RavenForm [raven form])
 #
-#    If using a custom client MPQ patch with custom Spell.dbc entries, custom spell IDs can be set here.
+#    The module automatically removes any RequiresSpellFocus and AreaGroupId restrictions server-side on startup.
+#    Custom spell IDs from custom Spell.dbc entries can also be specified here.
 #
+
+#
+#    UtilityFollowers.Spells.DefaultLearnLevel
+#        Description: Global default character level at which follower spells become available.
+#        Default:     10
+#
+
+UtilityFollowers.Spells.DefaultLearnLevel = 10
 
 # Banker Summon Spell
 UtilityFollowers.Banker.Spell.Enable = 1
 UtilityFollowers.Banker.Spell.AutoLearn = 1
-UtilityFollowers.Banker.Spell.LearnLevel = 1
-UtilityFollowers.Banker.Spell.SpellId = 67368
+UtilityFollowers.Banker.Spell.LearnLevel = 10
+UtilityFollowers.Banker.Spell.SpellId = 87094
 
 # Auctioneer Summon Spell
 UtilityFollowers.Auctioneer.Spell.Enable = 1
 UtilityFollowers.Auctioneer.Spell.AutoLearn = 1
-UtilityFollowers.Auctioneer.Spell.LearnLevel = 5
-UtilityFollowers.Auctioneer.Spell.SpellId = 54614
+UtilityFollowers.Auctioneer.Spell.LearnLevel = 10
+UtilityFollowers.Auctioneer.Spell.SpellId = 87093
 
 # Trainer Summon Spell
 UtilityFollowers.Trainer.Spell.Enable = 1
 UtilityFollowers.Trainer.Spell.AutoLearn = 1
 UtilityFollowers.Trainer.Spell.LearnLevel = 10
-UtilityFollowers.Trainer.Spell.SpellId = 54270
+UtilityFollowers.Trainer.Spell.SpellId = 87092
 
 #
 #    UtilityFollowers.Spells.SyncOnLogin
@@ -251,6 +260,16 @@ UtilityFollowers.Spells.SyncOnLogin = 1
 #
 
 UtilityFollowers.Spells.RemoveIfBelowLevel = 0
+
+#
+#    UtilityFollowers.Spells.PreventActionBarAutoAdd
+#        Description: Prevent follower spells from being automatically placed on the player's
+#                     action bar when learned. Spells remain accessible in the Spellbook.
+#        Default:     1 - Enabled (recommended)
+#                     0 - Disabled
+#
+
+UtilityFollowers.Spells.PreventActionBarAutoAdd = 1
 
 ###################################################################################################
 # TRAINER FOLLOWER SERVICE CONFIGURATION
@@ -290,3 +309,75 @@ UtilityFollowers.Trainer.FreeTalentReset = 0
 #
 
 UtilityFollowers.Trainer.ProfessionMode = "Trainer"
+
+###################################################################################################
+# MEDIVH TELEPORTATION SERVICE CONFIGURATION
+###################################################################################################
+#
+#    UtilityFollowers.Trainer.Teleport.Enable
+#        Description: Enable or disable Medivh's teleportation service to capital cities & hubs.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Trainer.Teleport.Enable = 1
+
+#
+#    UtilityFollowers.Trainer.Teleport.CombatCheck
+#        Description: Prevent players from teleporting while in combat.
+#        Default:     1 - Enabled (anti-exploit)
+#                     0 - Disabled
+#
+
+UtilityFollowers.Trainer.Teleport.CombatCheck = 1
+
+#
+#    UtilityFollowers.Trainer.Teleport.Cost
+#        Description: Gold cost (in copper) charged per teleportation (e.g. 10000 = 1 gold).
+#        Default:     0 - Free
+#
+
+UtilityFollowers.Trainer.Teleport.Cost = 0
+
+#
+#    UtilityFollowers.Trainer.Teleport.MinLevel
+#        Description: Minimum character level required to use teleportation.
+#        Default:     1
+#
+
+UtilityFollowers.Trainer.Teleport.MinLevel = 1
+
+#
+#    UtilityFollowers.Trainer.Teleport.DalaranMinLevel
+#        Description: Minimum character level required to teleport specifically to Dalaran.
+#        Default:     68 (Standard WotLK expansion gating)
+#
+
+UtilityFollowers.Trainer.Teleport.DalaranMinLevel = 68
+
+#
+#    UtilityFollowers.Trainer.Teleport.EnableExtraLocations
+#        Description: Enable submenu for thematic bonus locations (Karazhan, Caverns of Time, Gadgetzan, Booty Bay).
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Trainer.Teleport.EnableExtraLocations = 1
+ 
+#
+#    UtilityFollowers.Trainer.Teleport.EnableDungeons
+#        Description: Enable submenus for all Vanilla, TBC, and Wrath 5-player dungeons.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Trainer.Teleport.EnableDungeons = 1
+
+#
+#    UtilityFollowers.Trainer.Teleport.EnableRaids
+#        Description: Enable submenus for all Vanilla, TBC, and Wrath raids.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+
+UtilityFollowers.Trainer.Teleport.EnableRaids = 1

@@ -1,0 +1,5 @@
+# Local tools & build artifacts
+tools/
+*.log
+.vs/
+*.user

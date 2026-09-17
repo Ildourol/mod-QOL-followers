@@ -17,7 +17,10 @@ class UtilityFollowerAI : public PassiveAI
 public:
     explicit UtilityFollowerAI(Creature* creature, ObjectGuid ownerGuid, FollowerType type, uint32 displayId, float scale);
 
+    void Reset() override;
     void UpdateAI(uint32 diff) override;
+
+    void MovementInform(uint32 motionType, uint32 pointId) override;
 
     void AttackStart(Unit*) override { }
     void MoveInLineOfSight(Unit*) override { }
@@ -37,6 +40,10 @@ private:
     uint32 _updateTimer;
     uint32 _displayId;
     float _scale;
+
+    bool _isMovingToOwner{false};
+    float _lastDestX{0.0f};
+    float _lastDestY{0.0f};
 };
 
 #endif // UTILITY_FOLLOWER_AI_H

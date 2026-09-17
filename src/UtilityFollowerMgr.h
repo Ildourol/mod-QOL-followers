@@ -11,6 +11,7 @@
 #include <mutex>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 class Creature;
@@ -45,10 +46,17 @@ public:
     void HandleSpellSummon(Player* player, FollowerType type);
     void SyncSpellsOnLogin(Player* player);
     void CheckSpellsOnLevelChange(Player* player, uint8 oldLevel);
+    void TeachFollowerSpell(Player* player, uint32 spellId);
     void HandleMapChange(Player* player);
+
+    bool IsFollowerSpell(uint32 spellId) const;
+    bool IsAutoLearningSpell(ObjectGuid const& playerGuid, uint32 spellId) const;
+    void MarkAutoLearningSpell(ObjectGuid const& playerGuid, uint32 spellId);
+    void ClearAutoLearningSpell(ObjectGuid const& playerGuid, uint32 spellId);
 
     void UnregisterFollower(ObjectGuid const& creatureGuid);
     bool IsMapAllowed(Map const* map) const;
+    void ApplySpellCorrections();
 
 private:
     UtilityFollowerMgr() = default;
@@ -56,6 +64,7 @@ private:
     mutable std::mutex _lock;
     std::unordered_map<ObjectGuid, std::vector<FollowerRecord>> _playerFollowers;
     std::unordered_map<ObjectGuid, std::pair<ObjectGuid, FollowerType>> _followerToOwner;
+    std::unordered_map<ObjectGuid, std::unordered_set<uint32>> _autoLearningSpells;
 };
 
 #define sUtilityFollowerMgr UtilityFollowerMgr::instance()

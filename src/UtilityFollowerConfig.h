@@ -24,16 +24,16 @@ public:
     bool AuctioneerEnable{true};
     bool TrainerEnable{true};
 
-    // Movement
-    float FollowDistance{3.0f};
-    float StartFollowingDistance{5.0f};
+    // Movement (smooth unanchored hysteresis: 3.5 steady state, starts following at 7.0)
+    float FollowDistance{3.5f};
+    float StartFollowingDistance{7.0f};
     float CatchUpDistance{30.0f};
-    uint32 FollowUpdateInterval{500};
+    uint32 FollowUpdateInterval{300};
     bool TeleportWhenStuck{true};
 
     // Active limit & policy
-    uint32 MaxActive{3};
-    MaxActivePolicy ActivePolicy{MaxActivePolicy::Reject};
+    uint32 MaxActive{1};
+    MaxActivePolicy ActivePolicy{MaxActivePolicy::ReplaceOldest};
 
     // Environment restrictions
     bool AllowInWorld{true};
@@ -57,38 +57,52 @@ public:
     uint32 AuctioneerDisplayId{7993};
     float AuctioneerScale{1.0f};
 
-    // Trainer Appearance
-    uint32 TrainerCreatureEntry{26904};
-    uint32 TrainerDisplayId{28103};
+    // Medivh (Trainer & Teleporter) Appearance
+    uint32 TrainerCreatureEntry{15608};
+    uint32 TrainerDisplayId{18718};
     float TrainerScale{1.0f};
 
     // Banker Spell
     bool BankerSpellEnable{true};
     bool BankerSpellAutoLearn{true};
-    uint8 BankerSpellLearnLevel{1};
-    uint32 BankerSpellId{67368};
+    uint8 BankerSpellLearnLevel{10};
+    uint32 BankerSpellId{87094};
 
     // Auctioneer Spell
     bool AuctioneerSpellEnable{true};
     bool AuctioneerSpellAutoLearn{true};
-    uint8 AuctioneerSpellLearnLevel{5};
-    uint32 AuctioneerSpellId{54614};
+    uint8 AuctioneerSpellLearnLevel{10};
+    uint32 AuctioneerSpellId{87093};
 
-    // Trainer Spell
+    // Trainer / Medivh Spell
     bool TrainerSpellEnable{true};
     bool TrainerSpellAutoLearn{true};
     uint8 TrainerSpellLearnLevel{10};
-    uint32 TrainerSpellId{54270};
+    uint32 TrainerSpellId{87092};
+
+    // Global default spell learn level
+    uint8 DefaultSpellLearnLevel{10};
 
     // Spell sync & de-level handling
     bool SpellsSyncOnLogin{true};
     bool SpellsRemoveIfBelowLevel{false};
+    bool PreventActionBarAutoAdd{true};
 
     // Trainer policy
     bool TrainerFreeTraining{false};
     bool TrainerIgnoreLevelRequirements{false};
     bool TrainerFreeTalentReset{false};
     std::string TrainerProfessionMode{"Trainer"};
+
+    // Medivh Teleportation policy
+    bool TrainerTeleportEnable{true};
+    bool TrainerTeleportCombatCheck{true};
+    uint32 TrainerTeleportCost{0};
+    uint8 TrainerTeleportMinLevel{1};
+    uint8 TrainerTeleportDalaranMinLevel{68};
+    bool TrainerTeleportEnableExtraLocations{true};
+    bool TrainerTeleportEnableDungeons{true};
+    bool TrainerTeleportEnableRaids{true};
 
 private:
     UtilityFollowerConfig() = default;

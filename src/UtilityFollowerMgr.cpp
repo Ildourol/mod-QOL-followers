@@ -11,6 +11,8 @@
 #include "Map.h"
 #include "MotionMaster.h"
 #include "Player.h"
+#include "SpellInfo.h"
+#include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "UtilityFollowerAI.h"
 #include "UtilityFollowerConfig.h"
@@ -279,8 +281,8 @@ bool UtilityFollowerMgr::SummonFollower(Player* player, FollowerType type)
         _followerToOwner[summon->GetGUID()] = std::make_pair(player->GetGUID(), type);
     }
 
-    // Initial movement command
-    summon->GetMotionMaster()->MoveFollow(player, sUtilityFollowerConfig->FollowDistance, GetFollowerAngle(type));
+    // Initialize orientation towards owner
+    summon->SetFacingToObject(player);
 
     return true;
 }
@@ -352,6 +354,36 @@ void UtilityFollowerMgr::HandleSpellSummon(Player* player, FollowerType type)
         SummonFollower(player, type);
 }
 
+void UtilityFollowerMgr::TeachFollowerSpell(Player* player, uint32 spellId)
+{
+    if (!player || !spellId || player->HasSpell(spellId))
+        return;
+
+    if (sUtilityFollowerConfig->PreventActionBarAutoAdd)
+        MarkAutoLearningSpell(player->GetGUID(), spellId);
+
+    player->learnSpell(spellId, false);
+
+    if (sUtilityFollowerConfig->PreventActionBarAutoAdd)
+    {
+        // Immediate safeguard: clear any action button automatically populated by client/server
+        bool changed = false;
+        for (uint8 b = 0; b < MAX_ACTION_BUTTONS; ++b)
+        {
+            if (ActionButton const* ab = player->GetActionButton(b))
+            {
+                if (ab->GetAction() == spellId && ab->GetType() == ACTION_BUTTON_SPELL)
+                {
+                    player->removeActionButton(b);
+                    changed = true;
+                }
+            }
+        }
+        if (changed)
+            player->SendActionButtons(1);
+    }
+}
+
 void UtilityFollowerMgr::SyncSpellsOnLogin(Player* player)
 {
     if (!sUtilityFollowerConfig->Enable || !sUtilityFollowerConfig->SpellsSyncOnLogin)
@@ -363,30 +395,27 @@ void UtilityFollowerMgr::SyncSpellsOnLogin(Player* player)
     if (sUtilityFollowerConfig->BankerEnable &&
         sUtilityFollowerConfig->BankerSpellEnable &&
         sUtilityFollowerConfig->BankerSpellAutoLearn &&
-        level >= sUtilityFollowerConfig->BankerSpellLearnLevel &&
-        !player->HasSpell(sUtilityFollowerConfig->BankerSpellId))
+        level >= sUtilityFollowerConfig->BankerSpellLearnLevel)
     {
-        player->learnSpell(sUtilityFollowerConfig->BankerSpellId, false);
+        TeachFollowerSpell(player, sUtilityFollowerConfig->BankerSpellId);
     }
 
     // Auctioneer
     if (sUtilityFollowerConfig->AuctioneerEnable &&
         sUtilityFollowerConfig->AuctioneerSpellEnable &&
         sUtilityFollowerConfig->AuctioneerSpellAutoLearn &&
-        level >= sUtilityFollowerConfig->AuctioneerSpellLearnLevel &&
-        !player->HasSpell(sUtilityFollowerConfig->AuctioneerSpellId))
+        level >= sUtilityFollowerConfig->AuctioneerSpellLearnLevel)
     {
-        player->learnSpell(sUtilityFollowerConfig->AuctioneerSpellId, false);
+        TeachFollowerSpell(player, sUtilityFollowerConfig->AuctioneerSpellId);
     }
 
     // Trainer
     if (sUtilityFollowerConfig->TrainerEnable &&
         sUtilityFollowerConfig->TrainerSpellEnable &&
         sUtilityFollowerConfig->TrainerSpellAutoLearn &&
-        level >= sUtilityFollowerConfig->TrainerSpellLearnLevel &&
-        !player->HasSpell(sUtilityFollowerConfig->TrainerSpellId))
+        level >= sUtilityFollowerConfig->TrainerSpellLearnLevel)
     {
-        player->learnSpell(sUtilityFollowerConfig->TrainerSpellId, false);
+        TeachFollowerSpell(player, sUtilityFollowerConfig->TrainerSpellId);
     }
 
     // Auto-spawn restoration if enabled
@@ -415,30 +444,27 @@ void UtilityFollowerMgr::CheckSpellsOnLevelChange(Player* player, uint8 oldLevel
             sUtilityFollowerConfig->BankerSpellEnable &&
             sUtilityFollowerConfig->BankerSpellAutoLearn &&
             newLevel >= sUtilityFollowerConfig->BankerSpellLearnLevel &&
-            oldLevel < sUtilityFollowerConfig->BankerSpellLearnLevel &&
-            !player->HasSpell(sUtilityFollowerConfig->BankerSpellId))
+            oldLevel < sUtilityFollowerConfig->BankerSpellLearnLevel)
         {
-            player->learnSpell(sUtilityFollowerConfig->BankerSpellId, false);
+            TeachFollowerSpell(player, sUtilityFollowerConfig->BankerSpellId);
         }
 
         if (sUtilityFollowerConfig->AuctioneerEnable &&
             sUtilityFollowerConfig->AuctioneerSpellEnable &&
             sUtilityFollowerConfig->AuctioneerSpellAutoLearn &&
             newLevel >= sUtilityFollowerConfig->AuctioneerSpellLearnLevel &&
-            oldLevel < sUtilityFollowerConfig->AuctioneerSpellLearnLevel &&
-            !player->HasSpell(sUtilityFollowerConfig->AuctioneerSpellId))
+            oldLevel < sUtilityFollowerConfig->AuctioneerSpellLearnLevel)
         {
-            player->learnSpell(sUtilityFollowerConfig->AuctioneerSpellId, false);
+            TeachFollowerSpell(player, sUtilityFollowerConfig->AuctioneerSpellId);
         }
 
         if (sUtilityFollowerConfig->TrainerEnable &&
             sUtilityFollowerConfig->TrainerSpellEnable &&
             sUtilityFollowerConfig->TrainerSpellAutoLearn &&
             newLevel >= sUtilityFollowerConfig->TrainerSpellLearnLevel &&
-            oldLevel < sUtilityFollowerConfig->TrainerSpellLearnLevel &&
-            !player->HasSpell(sUtilityFollowerConfig->TrainerSpellId))
+            oldLevel < sUtilityFollowerConfig->TrainerSpellLearnLevel)
         {
-            player->learnSpell(sUtilityFollowerConfig->TrainerSpellId, false);
+            TeachFollowerSpell(player, sUtilityFollowerConfig->TrainerSpellId);
         }
     }
     else if (newLevel < oldLevel && sUtilityFollowerConfig->SpellsRemoveIfBelowLevel)
@@ -506,3 +532,65 @@ void UtilityFollowerMgr::UnregisterFollower(ObjectGuid const& creatureGuid)
             _playerFollowers.erase(playerItr);
     }
 }
+
+bool UtilityFollowerMgr::IsFollowerSpell(uint32 spellId) const
+{
+    return spellId == sUtilityFollowerConfig->BankerSpellId ||
+           spellId == sUtilityFollowerConfig->AuctioneerSpellId ||
+           spellId == sUtilityFollowerConfig->TrainerSpellId;
+}
+
+bool UtilityFollowerMgr::IsAutoLearningSpell(ObjectGuid const& playerGuid, uint32 spellId) const
+{
+    std::lock_guard<std::mutex> lock(_lock);
+    auto itr = _autoLearningSpells.find(playerGuid);
+    if (itr != _autoLearningSpells.end())
+        return itr->second.find(spellId) != itr->second.end();
+    return false;
+}
+
+void UtilityFollowerMgr::MarkAutoLearningSpell(ObjectGuid const& playerGuid, uint32 spellId)
+{
+    std::lock_guard<std::mutex> lock(_lock);
+    _autoLearningSpells[playerGuid].insert(spellId);
+}
+
+void UtilityFollowerMgr::ClearAutoLearningSpell(ObjectGuid const& playerGuid, uint32 spellId)
+{
+    std::lock_guard<std::mutex> lock(_lock);
+    auto itr = _autoLearningSpells.find(playerGuid);
+    if (itr != _autoLearningSpells.end())
+    {
+        itr->second.erase(spellId);
+        if (itr->second.empty())
+            _autoLearningSpells.erase(itr);
+    }
+}
+
+void UtilityFollowerMgr::ApplySpellCorrections()
+{
+    std::vector<uint32> spellIds = {
+        sUtilityFollowerConfig->TrainerSpellId,
+        sUtilityFollowerConfig->AuctioneerSpellId,
+        sUtilityFollowerConfig->BankerSpellId,
+        87092, // Summon Medivh (dedicated conflict-free spell)
+        87093, // Goblin Auctioneer (dedicated conflict-free spell)
+        87094, // Summon Banker (dedicated conflict-free spell)
+        31114, // Medivh's Journal safeguard (removes "Requires Southern End of the Master's Terrace")
+        54614  // Steam-Powered Auctioneer safeguard
+    };
+
+    for (uint32 id : spellIds)
+    {
+        if (!id)
+            continue;
+
+        if (SpellInfo* spellInfo = const_cast<SpellInfo*>(sSpellMgr->GetSpellInfo(id)))
+        {
+            spellInfo->RequiresSpellFocus = 0;
+            spellInfo->AreaGroupId = 0;
+            spellInfo->EquippedItemClass = -1;
+        }
+    }
+}
+

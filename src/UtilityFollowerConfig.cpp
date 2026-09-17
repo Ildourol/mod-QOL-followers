@@ -23,14 +23,14 @@ void UtilityFollowerConfig::Load()
     AuctioneerEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Enable", true);
     TrainerEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Enable", true);
 
-    FollowDistance = sConfigMgr->GetOption<float>("UtilityFollowers.FollowDistance", 3.0f);
-    StartFollowingDistance = sConfigMgr->GetOption<float>("UtilityFollowers.StartFollowingDistance", 5.0f);
+    FollowDistance = sConfigMgr->GetOption<float>("UtilityFollowers.FollowDistance", 3.5f);
+    StartFollowingDistance = sConfigMgr->GetOption<float>("UtilityFollowers.StartFollowingDistance", 7.0f);
     CatchUpDistance = sConfigMgr->GetOption<float>("UtilityFollowers.CatchUpDistance", 30.0f);
-    FollowUpdateInterval = sConfigMgr->GetOption<uint32>("UtilityFollowers.FollowUpdateInterval", 500);
+    FollowUpdateInterval = sConfigMgr->GetOption<uint32>("UtilityFollowers.FollowUpdateInterval", 300);
     TeleportWhenStuck = sConfigMgr->GetOption<bool>("UtilityFollowers.TeleportWhenStuck", true);
 
-    MaxActive = sConfigMgr->GetOption<uint32>("UtilityFollowers.MaxActive", 3);
-    std::string policyStr = sConfigMgr->GetOption<std::string>("UtilityFollowers.MaxActivePolicy", "Reject");
+    MaxActive = sConfigMgr->GetOption<uint32>("UtilityFollowers.MaxActive", 1);
+    std::string policyStr = sConfigMgr->GetOption<std::string>("UtilityFollowers.MaxActivePolicy", "ReplaceOldest");
 
     AllowInWorld = sConfigMgr->GetOption<bool>("UtilityFollowers.AllowInWorld", true);
     AllowInDungeons = sConfigMgr->GetOption<bool>("UtilityFollowers.AllowInDungeons", true);
@@ -52,32 +52,36 @@ void UtilityFollowerConfig::Load()
     AuctioneerDisplayId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.DisplayId", 7993);
     AuctioneerScale = sConfigMgr->GetOption<float>("UtilityFollowers.Auctioneer.Scale", 1.0f);
 
-    // Trainer Appearance
-    TrainerCreatureEntry = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.CreatureEntry", 26904);
-    TrainerDisplayId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.DisplayId", 28103);
+    // Medivh (Trainer & Teleporter) Appearance
+    TrainerCreatureEntry = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.CreatureEntry", 15608);
+    TrainerDisplayId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.DisplayId", 18718);
     TrainerScale = sConfigMgr->GetOption<float>("UtilityFollowers.Trainer.Scale", 1.0f);
+
+    // Global Spell Defaults
+    DefaultSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Spells.DefaultLearnLevel", 10);
 
     // Banker Spell
     BankerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Banker.Spell.Enable", true);
     BankerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Banker.Spell.AutoLearn", true);
-    BankerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Banker.Spell.LearnLevel", 1);
-    BankerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Banker.Spell.SpellId", 67368);
+    BankerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Banker.Spell.LearnLevel", DefaultSpellLearnLevel);
+    BankerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Banker.Spell.SpellId", 87094);
 
     // Auctioneer Spell
     AuctioneerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Spell.Enable", true);
     AuctioneerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Spell.AutoLearn", true);
-    AuctioneerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Auctioneer.Spell.LearnLevel", 5);
-    AuctioneerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.Spell.SpellId", 54614);
+    AuctioneerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Auctioneer.Spell.LearnLevel", DefaultSpellLearnLevel);
+    AuctioneerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.Spell.SpellId", 87093);
 
-    // Trainer Spell
+    // Trainer / Medivh Spell
     TrainerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Spell.Enable", true);
     TrainerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Spell.AutoLearn", true);
-    TrainerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Trainer.Spell.LearnLevel", 10);
-    TrainerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.Spell.SpellId", 54270);
+    TrainerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Trainer.Spell.LearnLevel", DefaultSpellLearnLevel);
+    TrainerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.Spell.SpellId", 87092);
 
     // Sync & De-level
     SpellsSyncOnLogin = sConfigMgr->GetOption<bool>("UtilityFollowers.Spells.SyncOnLogin", true);
     SpellsRemoveIfBelowLevel = sConfigMgr->GetOption<bool>("UtilityFollowers.Spells.RemoveIfBelowLevel", false);
+    PreventActionBarAutoAdd = sConfigMgr->GetOption<bool>("UtilityFollowers.Spells.PreventActionBarAutoAdd", true);
 
     // Trainer Services
     TrainerFreeTraining = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.FreeTraining", false);
@@ -85,20 +89,30 @@ void UtilityFollowerConfig::Load()
     TrainerFreeTalentReset = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.FreeTalentReset", false);
     TrainerProfessionMode = sConfigMgr->GetOption<std::string>("UtilityFollowers.Trainer.ProfessionMode", "Trainer");
 
+    // Medivh Teleportation Services
+    TrainerTeleportEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Teleport.Enable", true);
+    TrainerTeleportCombatCheck = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Teleport.CombatCheck", true);
+    TrainerTeleportCost = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.Teleport.Cost", 0);
+    TrainerTeleportMinLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Trainer.Teleport.MinLevel", 1);
+    TrainerTeleportDalaranMinLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Trainer.Teleport.DalaranMinLevel", 68);
+    TrainerTeleportEnableExtraLocations = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Teleport.EnableExtraLocations", true);
+    TrainerTeleportEnableDungeons = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Teleport.EnableDungeons", true);
+    TrainerTeleportEnableRaids = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Teleport.EnableRaids", true);
+
     // =========================================================================
     // Validation and Safe Fallbacks
     // =========================================================================
     if (FollowDistance <= 0.0f)
     {
-        LOG_WARN("module.qol_followers", "Invalid UtilityFollowers.FollowDistance ({}), resetting to default 3.0", FollowDistance);
-        FollowDistance = 3.0f;
+        LOG_WARN("module.qol_followers", "Invalid UtilityFollowers.FollowDistance ({}), resetting to default 2.0", FollowDistance);
+        FollowDistance = 2.0f;
     }
 
     if (StartFollowingDistance <= FollowDistance)
     {
         LOG_WARN("module.qol_followers", "UtilityFollowers.StartFollowingDistance ({}) must be greater than FollowDistance ({}), resetting to {}",
-            StartFollowingDistance, FollowDistance, FollowDistance + 2.0f);
-        StartFollowingDistance = FollowDistance + 2.0f;
+            StartFollowingDistance, FollowDistance, FollowDistance + 1.0f);
+        StartFollowingDistance = FollowDistance + 1.0f;
     }
 
     if (CatchUpDistance <= StartFollowingDistance)

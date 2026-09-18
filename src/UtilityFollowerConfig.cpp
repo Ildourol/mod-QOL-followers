@@ -64,19 +64,19 @@ void UtilityFollowerConfig::Load()
     BankerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Banker.Spell.Enable", true);
     BankerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Banker.Spell.AutoLearn", true);
     BankerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Banker.Spell.LearnLevel", DefaultSpellLearnLevel);
-    BankerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Banker.Spell.SpellId", 87094);
+    BankerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Banker.Spell.SpellId", 67368);
 
     // Auctioneer Spell
     AuctioneerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Spell.Enable", true);
     AuctioneerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Spell.AutoLearn", true);
     AuctioneerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Auctioneer.Spell.LearnLevel", DefaultSpellLearnLevel);
-    AuctioneerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.Spell.SpellId", 87093);
+    AuctioneerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.Spell.SpellId", 69046);
 
     // Trainer / Medivh Spell
     TrainerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Spell.Enable", true);
     TrainerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Spell.AutoLearn", true);
     TrainerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Trainer.Spell.LearnLevel", DefaultSpellLearnLevel);
-    TrainerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.Spell.SpellId", 87092);
+    TrainerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Trainer.Spell.SpellId", 62978);
 
     // Sync & De-level
     SpellsSyncOnLogin = sConfigMgr->GetOption<bool>("UtilityFollowers.Spells.SyncOnLogin", true);

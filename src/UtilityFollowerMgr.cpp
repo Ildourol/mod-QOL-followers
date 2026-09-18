@@ -16,6 +16,7 @@
 #include "TemporarySummon.h"
 #include "UtilityFollowerAI.h"
 #include "UtilityFollowerConfig.h"
+#include "WorldSession.h"
 
 UtilityFollowerMgr* UtilityFollowerMgr::instance()
 {
@@ -123,6 +124,12 @@ bool UtilityFollowerMgr::IsMapAllowed(Map const* map) const
 
 bool UtilityFollowerMgr::CanSummon(Player const* player, FollowerType type, std::string& reason) const
 {
+    if (!player || !IsRealPlayer(player))
+    {
+        reason = "Only real players may summon utility followers.";
+        return false;
+    }
+
     if (!sUtilityFollowerConfig->Enable)
     {
         reason = "Utility followers module is disabled.";
@@ -173,10 +180,14 @@ bool UtilityFollowerMgr::CanSummon(Player const* player, FollowerType type, std:
 
 bool UtilityFollowerMgr::SummonFollower(Player* player, FollowerType type)
 {
+    if (!player || !IsRealPlayer(player))
+        return false;
+
     std::string reason;
     if (!CanSummon(player, type, reason))
     {
-        ChatHandler(player->GetSession()).SendSysMessage(reason.c_str());
+        if (player->GetSession())
+            ChatHandler(player->GetSession()).SendSysMessage(reason.c_str());
         return false;
     }
 
@@ -356,7 +367,7 @@ void UtilityFollowerMgr::HandleSpellSummon(Player* player, FollowerType type)
 
 void UtilityFollowerMgr::TeachFollowerSpell(Player* player, uint32 spellId)
 {
-    if (!player || !spellId || player->HasSpell(spellId))
+    if (!player || !spellId || !IsRealPlayer(player) || player->HasSpell(spellId))
         return;
 
     if (sUtilityFollowerConfig->PreventActionBarAutoAdd)
@@ -386,7 +397,7 @@ void UtilityFollowerMgr::TeachFollowerSpell(Player* player, uint32 spellId)
 
 void UtilityFollowerMgr::SyncSpellsOnLogin(Player* player)
 {
-    if (!sUtilityFollowerConfig->Enable || !sUtilityFollowerConfig->SpellsSyncOnLogin)
+    if (!sUtilityFollowerConfig->Enable || !sUtilityFollowerConfig->SpellsSyncOnLogin || !IsRealPlayer(player))
         return;
 
     uint8 level = player->GetLevel();
@@ -432,7 +443,7 @@ void UtilityFollowerMgr::SyncSpellsOnLogin(Player* player)
 
 void UtilityFollowerMgr::CheckSpellsOnLevelChange(Player* player, uint8 oldLevel)
 {
-    if (!sUtilityFollowerConfig->Enable)
+    if (!sUtilityFollowerConfig->Enable || !IsRealPlayer(player))
         return;
 
     uint8 newLevel = player->GetLevel();
@@ -573,11 +584,14 @@ void UtilityFollowerMgr::ApplySpellCorrections()
         sUtilityFollowerConfig->TrainerSpellId,
         sUtilityFollowerConfig->AuctioneerSpellId,
         sUtilityFollowerConfig->BankerSpellId,
-        87092, // Summon Medivh (dedicated conflict-free spell)
-        87093, // Goblin Auctioneer (dedicated conflict-free spell)
-        87094, // Summon Banker (dedicated conflict-free spell)
-        31114, // Medivh's Journal safeguard (removes "Requires Southern End of the Master's Terrace")
-        54614  // Steam-Powered Auctioneer safeguard
+        67368, // Bank Errand (standard Blizzard WotLK spell)
+        69046, // Pack Hobgoblin (standard Blizzard WotLK spell - Goblin icon)
+        54614, // Steam-Powered Auctioneer (standard Blizzard WotLK spell)
+        62978, // Summon Guardian (standard Blizzard WotLK spell)
+        39339, // Hand of Medivh (standard Blizzard WotLK spell)
+        62076, // Pack Mule (standard Blizzard WotLK spell)
+        54270, // Argent Tome Book Spawn
+        31114  // Medivh's Journal safeguard
     };
 
     for (uint32 id : spellIds)
@@ -590,7 +604,28 @@ void UtilityFollowerMgr::ApplySpellCorrections()
             spellInfo->RequiresSpellFocus = 0;
             spellInfo->AreaGroupId = 0;
             spellInfo->EquippedItemClass = -1;
+            spellInfo->Effects[EFFECT_0].Effect = SPELL_EFFECT_DUMMY;
+            spellInfo->Effects[EFFECT_0].TargetA = SpellImplicitTargetInfo(TARGET_UNIT_CASTER);
+            spellInfo->Effects[EFFECT_1].Effect = 0;
+            spellInfo->Effects[EFFECT_2].Effect = 0;
         }
     }
+}
+
+bool UtilityFollowerMgr::IsRealPlayer(Player const* player)
+{
+    if (!player)
+        return false;
+
+    WorldSession const* session = player->GetSession();
+    if (!session)
+        return false;
+
+    return !session->IsBot();
+}
+
+bool UtilityFollowerMgr::IsPlayerBot(Player const* player)
+{
+    return !IsRealPlayer(player);
 }
 

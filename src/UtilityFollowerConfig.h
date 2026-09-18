@@ -66,19 +66,19 @@ public:
     bool BankerSpellEnable{true};
     bool BankerSpellAutoLearn{true};
     uint8 BankerSpellLearnLevel{10};
-    uint32 BankerSpellId{87094};
+    uint32 BankerSpellId{67368}; // Bank Errand (standard Blizzard WotLK spell)
 
     // Auctioneer Spell
     bool AuctioneerSpellEnable{true};
     bool AuctioneerSpellAutoLearn{true};
     uint8 AuctioneerSpellLearnLevel{10};
-    uint32 AuctioneerSpellId{87093};
+    uint32 AuctioneerSpellId{69046}; // Pack Hobgoblin (standard Blizzard WotLK spell)
 
     // Trainer / Medivh Spell
     bool TrainerSpellEnable{true};
     bool TrainerSpellAutoLearn{true};
     uint8 TrainerSpellLearnLevel{10};
-    uint32 TrainerSpellId{87092};
+    uint32 TrainerSpellId{62978}; // Summon Guardian (standard Blizzard WotLK spell)
 
     // Global default spell learn level
     uint8 DefaultSpellLearnLevel{10};

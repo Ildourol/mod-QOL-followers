@@ -58,6 +58,9 @@ public:
     bool IsMapAllowed(Map const* map) const;
     void ApplySpellCorrections();
 
+    [[nodiscard]] static bool IsRealPlayer(Player const* player);
+    [[nodiscard]] static bool IsPlayerBot(Player const* player);
+
 private:
     UtilityFollowerMgr() = default;
 

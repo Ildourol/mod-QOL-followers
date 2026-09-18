@@ -74,14 +74,16 @@ Followers utilize an **unanchored steering model** instead of the rigid native p
 
 ## Dedicated Summon Spells
 
-Each follower can be summoned and dismissed via its own dedicated conflict-free spell (available by default at level 10 via `UtilityFollowers.Spells.DefaultLearnLevel = 10`):
-- **Summon Banker**: Spell `87094` (*Summon Banker*, Icon: `inv_misc_coin_02` [Gold Coin])
-- **Goblin Auctioneer**: Spell `87093` (*Goblin Auctioneer*, Icon: `achievement_goblinhead` [Goblin Head])
-- **Summon Medivh**: Spell `87092` (*Summon Medivh*, Icon: `Spell_Nature_RavenForm` [Raven Form])
+Each follower can be summoned and dismissed via standard Blizzard WotLK in-game spells (learned automatically by default at level 10 via `UtilityFollowers.Spells.DefaultLearnLevel = 10` for real human players):
+- **Banker**: Spell `67368` (*Bank Errand*, Icon: `inv_misc_coin_02` [Gold Coin])
+- **Auctioneer**: Spell `69046` (*Pack Hobgoblin*, Icon: `ability_racial_packhobgoblin` [Goblin head]) *(Alternative: Spell `54614` "Steam-Powered Auctioneer")*
+- **Medivh (Trainer & Teleporter)**: Spell `62978` (*Summon Guardian*, Icon: `Spell_Nature_WispSplodeGreen` [Radiant Orb]) *(Alternative: Spell `39339` "Hand of Medivh")*
 
-### Clean Spellbook & Action Bar Integration
-- **Zero Action Bar Clutter**: When learned, follower summon spells are added cleanly into your Spellbook without automatically occupying or cluttering action bar slots (`UtilityFollowers.Spells.PreventActionBarAutoAdd = 1`). Players may manually drag them from the Spellbook onto action bars at any time.
-- **Zero DB Conflicts**: Uses dedicated, clean spell IDs with no focus requirements, no area restrictions (e.g. Master's Terrace), and no reagent costs.
+### Pure Standard Client Compatibility (Zero Client Patches)
+- **No `patch-A.MPQ` Needed**: Spells are 100% standard, unmodified Blizzard WotLK 3.3.5a spell IDs. Players can connect with an untouched, vanilla WoW 3.3.5a client with zero custom MPQ patches or client DBC edits.
+- **Real Players Only**: Follower spells are strictly reserved for real players. AI playerbots (from `mod-playerbots`, random bots, alt bots) are hardcoded to never learn these spells or summon followers.
+- **Zero Action Bar Clutter**: When learned, follower summon spells are added cleanly into your Spellbook without automatically occupying action bar slots (`UtilityFollowers.Spells.PreventActionBarAutoAdd = 1`). Players may manually drag them from the Spellbook onto action bars at any time.
+- **Zero DB Conflicts & Zero SQL Import**: Uses native creature and spell IDs handled cleanly in C++ with no database imports or table modifications required.
 
 ### Toggle Behavior
 - When absent: Casting the spell summons the corresponding follower.

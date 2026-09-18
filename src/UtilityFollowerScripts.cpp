@@ -811,7 +811,7 @@ public:
 
     void OnPlayerSpellCast(Player* player, Spell* spell, bool /*skipCheck*/) override
     {
-        if (!sUtilityFollowerConfig->Enable || !player || !spell)
+        if (!sUtilityFollowerConfig->Enable || !player || !spell || !UtilityFollowerMgr::IsRealPlayer(player))
             return;
 
         uint32 spellId = spell->GetSpellInfo()->Id;
@@ -884,7 +884,7 @@ public:
     static bool HandleSummonBankerCommand(ChatHandler* handler)
     {
         Player* player = handler->GetPlayer();
-        if (!player)
+        if (!player || !UtilityFollowerMgr::IsRealPlayer(player))
             return false;
 
         sUtilityFollowerMgr->HandleSpellSummon(player, FollowerType::Banker);
@@ -894,7 +894,7 @@ public:
     static bool HandleSummonAuctioneerCommand(ChatHandler* handler)
     {
         Player* player = handler->GetPlayer();
-        if (!player)
+        if (!player || !UtilityFollowerMgr::IsRealPlayer(player))
             return false;
 
         sUtilityFollowerMgr->HandleSpellSummon(player, FollowerType::Auctioneer);
@@ -904,7 +904,7 @@ public:
     static bool HandleSummonTrainerCommand(ChatHandler* handler)
     {
         Player* player = handler->GetPlayer();
-        if (!player)
+        if (!player || !UtilityFollowerMgr::IsRealPlayer(player))
             return false;
 
         sUtilityFollowerMgr->HandleSpellSummon(player, FollowerType::Trainer);
@@ -914,7 +914,7 @@ public:
     static bool HandleDismissCommand(ChatHandler* handler)
     {
         Player* player = handler->GetPlayer();
-        if (!player)
+        if (!player || !UtilityFollowerMgr::IsRealPlayer(player))
             return false;
 
         sUtilityFollowerMgr->DespawnAllFollowers(player);

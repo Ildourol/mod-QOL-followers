@@ -70,7 +70,7 @@ void UtilityFollowerConfig::Load()
     AuctioneerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Spell.Enable", true);
     AuctioneerSpellAutoLearn = sConfigMgr->GetOption<bool>("UtilityFollowers.Auctioneer.Spell.AutoLearn", true);
     AuctioneerSpellLearnLevel = sConfigMgr->GetOption<uint8>("UtilityFollowers.Auctioneer.Spell.LearnLevel", DefaultSpellLearnLevel);
-    AuctioneerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.Spell.SpellId", 69046);
+    AuctioneerSpellId = sConfigMgr->GetOption<uint32>("UtilityFollowers.Auctioneer.Spell.SpellId", 54614);
 
     // Trainer / Medivh Spell
     TrainerSpellEnable = sConfigMgr->GetOption<bool>("UtilityFollowers.Trainer.Spell.Enable", true);

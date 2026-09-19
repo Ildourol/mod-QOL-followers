@@ -209,7 +209,7 @@ UtilityFollowers.Trainer.Scale = 1.0
 #
 #    Standard Blizzard WotLK In-Game Spells (No client MPQ patch required):
 #      - Banker:     Spell 67368 ("Bank Errand" - Icon: inv_misc_coin_02 [gold coin])
-#      - Auctioneer: Spell 69046 ("Pack Hobgoblin" - Icon: ability_racial_packhobgoblin [goblin head])
+#      - Auctioneer: Spell 54614 ("Steam-Powered Auctioneer" - Icon: Trade_Engineering [brass gear])
 #      - Trainer:    Spell 62978 ("Summon Guardian" - Icon: Spell_Nature_WispSplodeGreen [radiant orb])
 #
 #    All spells are 100% native Blizzard WotLK spells with instant cast, 0 mana, 0 focus, and 0 area restrictions.
@@ -234,7 +234,7 @@ UtilityFollowers.Banker.Spell.SpellId = 67368
 UtilityFollowers.Auctioneer.Spell.Enable = 1
 UtilityFollowers.Auctioneer.Spell.AutoLearn = 1
 UtilityFollowers.Auctioneer.Spell.LearnLevel = 10
-UtilityFollowers.Auctioneer.Spell.SpellId = 69046
+UtilityFollowers.Auctioneer.Spell.SpellId = 54614
 
 # Trainer Summon Spell
 UtilityFollowers.Trainer.Spell.Enable = 1

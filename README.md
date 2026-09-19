@@ -76,7 +76,7 @@ Followers utilize an **unanchored steering model** instead of the rigid native p
 
 Each follower can be summoned and dismissed via standard Blizzard WotLK in-game spells (learned automatically by default at level 10 via `UtilityFollowers.Spells.DefaultLearnLevel = 10` for real human players):
 - **Banker**: Spell `67368` (*Bank Errand*, Icon: `inv_misc_coin_02` [Gold Coin])
-- **Auctioneer**: Spell `69046` (*Pack Hobgoblin*, Icon: `ability_racial_packhobgoblin` [Goblin head]) *(Alternative: Spell `54614` "Steam-Powered Auctioneer")*
+- **Auctioneer**: Spell `54614` (*Steam-Powered Auctioneer*, Icon: `Trade_Engineering` [Brass Gear]) *(Alternative: Spell `60450` "Coin Toss")*
 - **Medivh (Trainer & Teleporter)**: Spell `62978` (*Summon Guardian*, Icon: `Spell_Nature_WispSplodeGreen` [Radiant Orb]) *(Alternative: Spell `39339` "Hand of Medivh")*
 
 ### Pure Standard Client Compatibility (Zero Client Patches)

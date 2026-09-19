@@ -72,7 +72,7 @@ public:
     bool AuctioneerSpellEnable{true};
     bool AuctioneerSpellAutoLearn{true};
     uint8 AuctioneerSpellLearnLevel{10};
-    uint32 AuctioneerSpellId{69046}; // Pack Hobgoblin (standard Blizzard WotLK spell)
+    uint32 AuctioneerSpellId{54614}; // Steam-Powered Auctioneer (standard Blizzard WotLK spell)
 
     // Trainer / Medivh Spell
     bool TrainerSpellEnable{true};
